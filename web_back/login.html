@@ -9,9 +9,12 @@
     <link rel="stylesheet" type="text/css" href="css/reset.css">
     <link rel="stylesheet" type="text/css" href="css/iconfont.css">
     <link rel="stylesheet" type="text/css" href="css/main.css">
+    <link rel="stylesheet" type="text/css" href="js/bootstrap/css/bootstrap.min.css">
 </head>
 
 <body>
+    <script src="./js/jquery-1.12.4.min.js"></script>
+    <script src="./js/bootstrap/js/bootstrap.min.js"></script>
     <div class="main_wrap">
         <div class="header">
             <a href="#" class="logo"><img src="images/logo.png" alt=""></a>
@@ -29,7 +32,68 @@
             </form>
         </div>
 
-    </div> 
+    </div>
+    <!-- Modal 模态弹出框  -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">温馨提示</h4>
+                </div>
+                <div class="modal-body">
+                    ...
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        $(function () {
+            $('.input_sub').on('click', function (e) {
+                e.preventDefault();
+                var userName = $('.input_txt').val().trim();
+                var password = $('.input_pass').val().trim();
+                $('#myModal').modal({
+                    keyboard: true,
+                })
+                if (userName == '' || password == '') {
+                    $('.modal-body').text('用户名或者密码没有填写');
+
+                    return;
+                }
+                $.ajax({
+                    url: 'http://localhost:8000/admin/login',
+                    type: 'post',
+                    data: {
+                        user_name: userName,
+                        password: password
+                    },
+                    success: function (data) {
+
+                        if (data.code == 200) {
+                            $('#myModal').modal({
+                                keyboard: true
+                            });
+                            $('.modal-body').text('登陆成功,即将跳转');
+                            $('.btn-default').on('click',function(){
+                                window.location.href = './index.html'
+                            })
+                           
+                        } else {
+                            $('#myModal').modal({
+                                keyboard: true
+                            });
+                            $('.modal-body').text('用户名或者密码错误');
+                        }
+                    }
+                })
+            })
+        })
+    </script>
 
 </body>
 
